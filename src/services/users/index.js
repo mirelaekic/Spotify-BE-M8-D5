@@ -1,4 +1,5 @@
 const express = require("express")
+
 const userModel = require("./schema")
 const {authenticate,refresh} = require("../auth/tool")
 const  {authorize} = require("../auth/middleware")
@@ -107,7 +108,7 @@ router.get('/facebookLogin',
           httpOnly: true,
         });
         console.log(res.user.tokens, "TOKENS")
-        res.status(200).redirect("https://www.youtube.com/watch?v=2ocykBzWDiM%22");
+        res.status(200).redirect("http://localhost:3000/home");
       } catch (error) {
         console.log(error);
         next(error);
