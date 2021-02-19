@@ -3,7 +3,6 @@ const UserModel = require("../users/schema");
 
 const authenticate = async user => {
     try {
-      // create tokens
       const accessToken = await generateAccessToken({ _id: user._id })
       const refreshToken = await generateRefreshToken({ _id: user._id })
 

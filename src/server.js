@@ -4,7 +4,7 @@ const {join} = require("path");
 const listEndpoints = require("express-list-endpoints");
 const mongoose = require("mongoose");
 
-const usersRouter = require("./services/users")
+const router = require("./services/users")
 
 const {
     notFoundHandler,
@@ -21,7 +21,7 @@ const staticFolderPath = join(__dirname, "../public")
 server.use(express.static(staticFolderPath))
 server.use(express.json())
 
-server.use("/users",usersRouter)
+server.use("/users",router)
 
 server.use(badRequestHandler)
 server.use(forbiddenHandler)

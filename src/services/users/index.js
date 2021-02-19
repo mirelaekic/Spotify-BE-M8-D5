@@ -1,5 +1,6 @@
 const express = require("express")
 const UserSchema = require("./schema")
+const {authenticate,refresh} = require("../auth/tool")
 const router = express.Router()
 
 router.get("/",async (req,res,next) => {
@@ -42,3 +43,5 @@ router.post("/login", async(req,res,next) => {
         next(error)
     }
 })
+
+module.exports = router
