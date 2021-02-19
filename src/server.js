@@ -3,7 +3,7 @@ const cors = require("cors");
 const {join} = require("path");
 const listEndpoints = require("express-list-endpoints");
 const mongoose = require("mongoose");
-
+const passport = require("passport");
 const router = require("./services/users")
 require("dotenv/config");
 const {
@@ -20,7 +20,7 @@ const port = process.env.PORT;
 const staticFolderPath = join(__dirname, "../public")
 server.use(express.static(staticFolderPath))
 server.use(express.json())
-
+server.use(passport.initialize())
 server.use("/users",router)
 
 server.use(badRequestHandler)

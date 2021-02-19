@@ -2,7 +2,7 @@ const express = require("express")
 const UserSchema = require("./schema")
 const {authenticate,refresh} = require("../auth/tool")
 const  {authorize} = require("../auth/middleware")
-const passport = require("passport");
+const passport = require("./oauthspotify");
 const router = express.Router()
 
 router.get("/", authorize, async (req, res, next) => {
@@ -84,7 +84,7 @@ router.get('/facebookLogin',
         res.cookie("token", req.user.token, {
           httpOnly: true,
         });
-        res.status(200).redirect("https://www.youtube.com/watch?v=2ocykBzWDiM");
+        res.status(200).redirect("http://localhost:5000/home");
       } catch (error) {
         console.log(error);
         next(error);
