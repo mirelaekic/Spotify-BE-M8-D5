@@ -62,4 +62,26 @@ router.get('/facebookLogin',
       console.log(error);
     }
   });
+  router.get(
+    "/spotify",
+    passport.authenticate("spotify", {
+      scope: ["user-read-email", "user-read-private"],
+    })
+  );
+  usersRouter.get(
+    "/spotify/redirect",
+    passport.authenticate("spotify"),
+    async (req, res, next) => {
+      try {
+        res.cookie("token", req.user.token, {
+          httpOnly: true,
+        });
+        res.status(200).redirect("https://www.youtube.com/watch?v=2ocykBzWDiM");
+      } catch (error) {
+        console.log(error);
+        next(error);
+      }
+    }
+  );
+  
 module.exports = router

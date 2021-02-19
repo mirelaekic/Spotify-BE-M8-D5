@@ -1,5 +1,6 @@
 const passport = require("passport");
 const facebookStrategy = require("passport-facebook").Strategy;
+
 const userModel = require("./schema");
 const jwt = require("jsonwebtoken");
 
