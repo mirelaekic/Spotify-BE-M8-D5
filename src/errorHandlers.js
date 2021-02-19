@@ -1,4 +1,3 @@
-  
 // ERROR HANDLERS
 const badRequestHandler = (err, req, res, next) => {
     if (err.httpStatusCode === 400) {
