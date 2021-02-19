@@ -14,6 +14,8 @@ const UserSchema = new Schema({
         unique:true,
         required:true
     },
+    spotifyId:String,
+    googleId:String,
     refreshTokens: [{ token: { type: String } }],
 },{timestamps:true})
 

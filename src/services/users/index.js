@@ -1,5 +1,6 @@
 const express = require("express")
-const UserSchema = require("./schema")
+const passport = require("passport");
+const userModel = require("./schema")
 const {authenticate,refresh} = require("../auth/tool")
 const  {authorize} = require("../auth/middleware")
 const passport = require("./oauthspotify");
@@ -8,7 +9,7 @@ const router = express.Router()
 router.get("/", authorize, async (req, res, next) => {
     try {
       console.log(req.user)
-      const users = await UserSchema.find()
+      const users = await userModel.find()
       res.send(users)
     } catch (error) {
       next(error)
@@ -24,7 +25,7 @@ router.get("/me",authorize,async (req,res,next) => {
 })
 router.post("/register",async (req,res,next) => {
     try {
-        const newUser = new UserSchema(req.body)
+        const newUser = new userModel(req.body)
         console.log(newUser,"NEW USER")
         const {_id} = await newUser.save()
         res.status(201).send(_id)
@@ -32,16 +33,37 @@ router.post("/register",async (req,res,next) => {
         next(error)
     }
 })
-router.post("/login", async(req,res,next) => {
+router.post("/login", async (req, res, next) => {
     try {
-        const {email,password} = req.body
-        const user = await UserSchema.findByCredentials(email,password)
-        const tokens = await authenticate(user)
-        res.send(tokens)
+      const { email, password } = req.body
+  
+      const user = await userModel.findByCredentials(email, password)
+      const { accessToken, refreshToken } = await authenticate(user)
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        path: "/",
+      })
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        path: "/users/refreshToken",
+      })
+  
+      res.send("Ok")
     } catch (error) {
-        next(error)
+      console.log(error)
+      next(error)
     }
-})
+  })
+  router.get("/refreshToken", async (req, res, next) => {
+    try {
+      console.log(req.cookies)
+      const oldRefreshToken = req.cookies.refreshToken
+      const { accessToken, refreshToken } = await refresh(oldRefreshToken)
+      res.send({ accessToken, refreshToken })
+    } catch (error) {
+      next(error)
+    }
+  })
 router.put("/me",authorize, async (req, res, next) => {
     try {
       const updates = Object.keys(req.body)
@@ -71,25 +93,48 @@ router.get('/facebookLogin',
     }
   });
   router.get(
-    "/spotify",
-    passport.authenticate("spotify", {
-      scope: ["user-read-email", "user-read-private"],
-    })
-  );
+    "/spotifyLogin",
+    passport.authenticate("spotify", { scope: ["profile", "email"] })
+  )
   router.get(
-    "/spotify/redirect",
+    "/spotifyRedirect",
     passport.authenticate("spotify"),
     async (req, res, next) => {
       try {
-        res.cookie("token", req.user.token, {
+        res.cookie("accessToken", req.user.tokens.accessToken, {
+          httpOnly: true,
+        })
+        res.cookie("refreshToken", req.user.tokens.refreshToken, {
           httpOnly: true,
         });
         res.status(200).redirect("http://localhost:5000/home");
       } catch (error) {
-        console.log(error);
-        next(error);
+        next(error)
       }
     }
-  );
+  )
+  router.get(
+    "/googleLogin",
+    passport.authenticate("google", { scope: ["profile", "email"] })
+  )
+  router.get(
+    "/googleRedirect",
+    passport.authenticate("google"),
+    async (req, res, next) => {
+      try {
+        res.cookie("accessToken", req.user.tokens.accessToken, {
+          httpOnly: true,
+        })
+        res.cookie("refreshToken", req.user.tokens.refreshToken, {
+          httpOnly: true,
+          path: "/users/refreshToken",
+        })
+  
+        res.status(200).redirect("http://localhost:3000/")
+      } catch (error) {
+        next(error)
+      }
+    }
+  )
   
 module.exports = router

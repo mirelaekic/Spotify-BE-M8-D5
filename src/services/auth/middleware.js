@@ -3,7 +3,7 @@ const UserSchema = require("../users/schema")
 
 const authorize = async (req,res,next) => {
     try {
-        const token = req.header("Authorization").replace("Bearer ", "")
+        const token =  req.cookies.accessToken
         console.log(token,"This is the token from header")
         const decoded = await verifyAccessToken(token)
         console.log(decoded,"verifying token")

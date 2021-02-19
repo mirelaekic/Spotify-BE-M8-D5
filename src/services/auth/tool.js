@@ -4,8 +4,9 @@ const UserModel = require("../users/schema");
 const authenticate = async user => {
     try {
       const accessToken = await generateAccessToken({ _id: user._id })
+      console.log(accessToken,"NEW TOKEN")
       const refreshToken = await generateRefreshToken({ _id: user._id })
-        console.log(accessToken,"NEW TOKEN FOR USER")
+        console.log(accessToken,"NEW REFRESH TOKEN FOR USER")
       user.refreshTokens = user.refreshTokens.concat({ token: refreshToken })
       await user.save()
         console.log(user,"USER FOR THE TOKEN")
