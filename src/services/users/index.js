@@ -1,7 +1,8 @@
 const express = require("express")
 const UserSchema = require("./schema")
-const {authenticate} = require("../auth/tool")
+const {authenticate,refresh} = require("../auth/tool")
 const  {authorize} = require("../auth/middleware")
+const passport = require("passport");
 const router = express.Router()
 
 router.get("/", authorize, async (req, res, next) => {
@@ -51,4 +52,44 @@ router.put("/me",authorize, async (req, res, next) => {
       next(error)
     }
   })
+router.get('/facebookLogin',
+             
+  passport.authenticate("facebook")
+  
+  );
+ 
+  router.get('/facebook',
+  passport.authenticate('facebook', { failureRedirect: '/register' }),
+  async (req, res) => {
+    try {
+      console.log(req.user);
+      const { token } = req.user.tokens;
+      res.cookie("accessToken", token, { httpOnly: true });
+      res.status(200).redirect("http://localhost:3000/home");
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  router.get(
+    "/spotify",
+    passport.authenticate("spotify", {
+      scope: ["user-read-email", "user-read-private"],
+    })
+  );
+  usersRouter.get(
+    "/spotify/redirect",
+    passport.authenticate("spotify"),
+    async (req, res, next) => {
+      try {
+        res.cookie("token", req.user.token, {
+          httpOnly: true,
+        });
+        res.status(200).redirect("https://www.youtube.com/watch?v=2ocykBzWDiM");
+      } catch (error) {
+        console.log(error);
+        next(error);
+      }
+    }
+  );
+  
 module.exports = router

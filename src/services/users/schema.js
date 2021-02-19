@@ -52,4 +52,5 @@ UserSchema.methods.tojSON = function (){
     next()
   })
 
-  module.exports = mongoose.model("users",UserSchema)
+  const userModel = mongoose.model("users",UserSchema)
+  module.exports = userModel
