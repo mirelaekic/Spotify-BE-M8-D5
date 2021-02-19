@@ -1,6 +1,7 @@
 const express = require("express")
 const UserSchema = require("./schema")
 const {authenticate} = require("../auth/tool")
+const  {authorize} = require("../auth/middleware")
 const router = express.Router()
 router.get("/",async (req,res,next) => {
     try {
@@ -43,5 +44,14 @@ router.post("/login", async(req,res,next) => {
         next(error)
     }
 })
-
+router.put("/me",authorize, async (req, res, next) => {
+    try {
+      const updates = Object.keys(req.body)
+      updates.forEach(update => (req.user[update] = req.body[update]))
+      await req.user.save()
+      res.send(req.user)
+    } catch (error) {
+      next(error)
+    }
+  })
 module.exports = router
