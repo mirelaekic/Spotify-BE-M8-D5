@@ -5,10 +5,10 @@ const authenticate = async user => {
     try {
       const accessToken = await generateAccessToken({ _id: user._id })
       const refreshToken = await generateRefreshToken({ _id: user._id })
-
+        console.log(accessToken,"NEW TOKEN FOR USER")
       user.refreshTokens = user.refreshTokens.concat({ token: refreshToken })
       await user.save()
-
+        console.log(user,"USER FOR THE TOKEN")
       return { accessToken, refreshToken }
     } catch (error) {
       console.log(error)

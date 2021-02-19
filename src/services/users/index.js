@@ -1,8 +1,7 @@
 const express = require("express")
 const UserSchema = require("./schema")
-const {authenticate,refresh} = require("../auth/tool")
+const {authenticate} = require("../auth/tool")
 const router = express.Router()
-
 router.get("/",async (req,res,next) => {
     try {
         
@@ -27,10 +26,11 @@ router.get("/me",async (req,res,next) => {
 router.post("/register",async (req,res,next) => {
     try {
         const newUser = new UserSchema(req.body)
+        console.log(newUser,"NEW USER")
         const {_id} = await newUser.save()
         res.status(201).send(_id)
     } catch (error) {
-        
+        next(error)
     }
 })
 router.post("/login", async(req,res,next) => {

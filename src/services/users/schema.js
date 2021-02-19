@@ -19,6 +19,7 @@ const UserSchema = new Schema({
 
 UserSchema.methods.tojSON = function (){
     const user = this
+    console.log(user,"TOJSON")
     const userToObject = user.toObject()
     delete userToObject.password
     return userToObject
@@ -40,7 +41,9 @@ UserSchema.methods.tojSON = function (){
  
   UserSchema.pre("save", async function (next) {
     const user = this 
+    console.log(user,"current user")
     const pass = user.password
+    console.log(pass,"current pass")
     if(user.isModified("password")){
       user.password = await bcrypt.hash(pass,10)
     }

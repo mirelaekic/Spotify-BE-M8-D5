@@ -5,7 +5,7 @@ const listEndpoints = require("express-list-endpoints");
 const mongoose = require("mongoose");
 
 const router = require("./services/users")
-
+require("dotenv/config");
 const {
     notFoundHandler,
     forbiddenHandler,
@@ -15,7 +15,7 @@ const {
 
 const server = express();
 
-server.use(cors);
+server.use(cors());
 const port = process.env.PORT;
 const staticFolderPath = join(__dirname, "../public")
 server.use(express.static(staticFolderPath))
