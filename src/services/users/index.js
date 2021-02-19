@@ -1,6 +1,7 @@
 const express = require("express")
 const UserSchema = require("./schema")
 const {authenticate,refresh} = require("../auth/tool")
+const passport = require("passport");
 const router = express.Router()
 
 router.get("/",async (req,res,next) => {
@@ -43,5 +44,22 @@ router.post("/login", async(req,res,next) => {
         next(error)
     }
 })
-
+router.get('/facebookLogin',
+             
+  passport.authenticate("facebook")
+  
+  );
+ 
+  router.get('/facebook',
+  passport.authenticate('facebook', { failureRedirect: '/register' }),
+  async (req, res) => {
+    try {
+      console.log(req.user);
+      const { token } = req.user.tokens;
+      res.cookie("accessToken", token, { httpOnly: true });
+      res.status(200).redirect("http://localhost:3000/home");
+    } catch (error) {
+      console.log(error);
+    }
+  });
 module.exports = router
