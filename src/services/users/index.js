@@ -3,25 +3,22 @@ const UserSchema = require("./schema")
 const {authenticate} = require("../auth/tool")
 const  {authorize} = require("../auth/middleware")
 const router = express.Router()
-router.get("/",async (req,res,next) => {
+
+router.get("/", authorize, async (req, res, next) => {
     try {
-        
+      console.log(req.user)
+      const users = await UserSchema.find()
+      res.send(users)
     } catch (error) {
-        
+      next(error)
     }
-})
-router.get("/:id",async (req,res,next) => {
+  })
+router.get("/me",authorize,async (req,res,next) => {
     try {
-        
+        console.log(req.user,"USER")
+        res.send(req.user)
     } catch (error) {
-        
-    }
-})
-router.get("/me",async (req,res,next) => {
-    try {
-        
-    } catch (error) {
-        
+        next(error)
     }
 })
 router.post("/register",async (req,res,next) => {

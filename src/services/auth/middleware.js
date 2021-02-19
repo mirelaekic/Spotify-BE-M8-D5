@@ -1,21 +1,26 @@
-const {verifyJWT} = require("./tool")
-const user = require("../users/schema")
+const {verifyAccessToken} = require("./tool")
+const UserSchema = require("../users/schema")
+
 const authorize = async (req,res,next) => {
     try {
         const token = req.header("Authorization").replace("Bearer ", "")
-        const decoded = await verifyJWT(token)
-        const AuthorizedUser = await user.findOne({_id:decoded._id})
-        if(!AuthorizedUser){
-            throw new Error()
-        }
+        console.log(token,"This is the token from header")
+        const decoded = await verifyAccessToken(token)
+        console.log(decoded,"verifying token")
+        const user = await UserSchema.findOne({_id:decoded._id})
+        console.log(user,"if user is auth")
+        if (!user) throw new Error()
+        req.user = user
+        console.log(user,"THE USER")
         req.token = token
-        req.user = AuthorizedUser
+        console.log(token,"THE TOKEN")
         next()
-    } catch (error) {
-        const err = new Error("You have to authenticate!")
+      } catch (error) {
+        console.log(error)
+        const err = new Error("Authenticate")
         err.httpStatusCode = 401
         next(err)
+      }
     }
-}
 
 module.exports = {authorize}

@@ -29,11 +29,13 @@ const authenticate = async user => {
       )
     )
   
-  const verifyAccessToken = token =>
+    const verifyAccessToken = token =>
     new Promise((res, rej) =>
-      jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+          console.log(token,"from USER TOKEN")
         if (err) rej(err)
         res(decoded)
+        console.log(decoded,"IF DECODED")
       })
     )
   
@@ -50,9 +52,10 @@ const authenticate = async user => {
       )
     )
   
-  const verifyRefreshToken = token =>
+    const verifyRefreshToken = token =>
     new Promise((res, rej) =>
-      jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+          console.log(token)
         if (err) rej(err)
         res(decoded)
       })

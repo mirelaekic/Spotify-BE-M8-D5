@@ -19,9 +19,11 @@ const UserSchema = new Schema({
 
 UserSchema.methods.tojSON = function (){
     const user = this
-    console.log(user,"TOJSON")
+
     const userToObject = user.toObject()
+
     delete userToObject.password
+    
     return userToObject
   }
  
