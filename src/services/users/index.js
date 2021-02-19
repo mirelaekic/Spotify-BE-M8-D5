@@ -93,8 +93,11 @@ router.get('/facebookLogin',
   });
   router.get(
     "/spotifyLogin",
-    passport.authenticate("spotify", { scope: ["profile", "email"] })
-  )
+    passport.authenticate('spotify', {
+        scope: ['user-read-email', 'user-read-private'],
+        showDialog: true,
+    })
+  );
   router.get(
     "/spotifyRedirect",
     passport.authenticate("spotify"),
@@ -102,16 +105,15 @@ router.get('/facebookLogin',
       try {
         res.cookie("accessToken", req.user.tokens.accessToken, {
           httpOnly: true,
-        })
-        res.cookie("refreshToken", req.user.tokens.refreshToken, {
-          httpOnly: true,
         });
-        res.status(200).redirect("http://localhost:5000/home");
+        console.log(res.user.tokens, "TOKENS")
+        res.status(200).redirect("https://www.youtube.com/watch?v=2ocykBzWDiM%22");
       } catch (error) {
-        next(error)
+        console.log(error);
+        next(error);
       }
     }
-  )
+  );
   router.get(
     "/googleLogin",
     passport.authenticate("google", { scope: ["profile", "email"] })

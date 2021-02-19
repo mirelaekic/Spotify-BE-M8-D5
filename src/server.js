@@ -17,7 +17,7 @@ const {
   } = require("./errorHandlers")
 
 const server = express();
-const whitelist = ["http://localhost:3000","http://localhost:3012"]
+const whitelist = ["http://localhost:3000","http://localhost:3001","http://localhost:3012"]
 const corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
