@@ -1,5 +1,4 @@
 const express = require("express")
-const passport = require("passport");
 const userModel = require("./schema")
 const {authenticate,refresh} = require("../auth/tool")
 const  {authorize} = require("../auth/middleware")
