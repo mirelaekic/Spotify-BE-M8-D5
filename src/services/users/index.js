@@ -76,7 +76,7 @@ router.get('/facebookLogin',
       scope: ["user-read-email", "user-read-private"],
     })
   );
-  usersRouter.get(
+  router.get(
     "/spotify/redirect",
     passport.authenticate("spotify"),
     async (req, res, next) => {
